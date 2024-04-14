@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "darksalmon", "id": "ENSMUSG00000001082", "label": "ENSMUSG00000001082", "shape": "dot", "title": "ENSMUSG00000001082\nensembl_gene_id: ENSMUSG00000001082\ngene_biotype: protein_coding\ngene_name: Mfsd10"}, {"color": "darksalmon", "id": "ENSMUSG00000002307", "label": "ENSMUSG00000002307", "shape": "dot", "title": "ENSMUSG00000002307\nensembl_gene_id: ENSMUSG00000002307\ngene_biotype: protein_coding\ngene_name: Daxx"}, {"color": "darksalmon", "id": "ENSMUSG00000017344", "label": "ENSMUSG00000017344", "shape": "dot", "title": "ENSMUSG00000017344\nensembl_gene_id: ENSMUSG00000017344\ngene_biotype: protein_coding\ngene_name: Vtn"}, {"color": "darksalmon", "id": "ENSMUSG00000017950", "label": "ENSMUSG00000017950", "shape": "dot", "title": "ENSMUSG00000017950\nensembl_gene_id: ENSMUSG00000017950\ngene_biotype: protein_coding\ngene_name: Hnf4a"}, {"color": "darksalmon", "id": "ENSMUSG00000028989", "label": "ENSMUSG00000028989", "shape": "dot", "title": "ENSMUSG00000028989\nensembl_gene_id: ENSMUSG00000028989\ngene_biotype: protein_coding\ngene_name: Angptl7"}, {"color": "darksalmon", "id": "ENSMUSG00000037085", "label": "ENSMUSG00000037085", "shape": "dot", "title": "ENSMUSG00000037085\nensembl_gene_id: ENSMUSG00000037085\ngene_biotype: protein_coding\ngene_name: Trmt12"}, {"color": "darksalmon", "id": "ENSMUSG00000038180", "label": "ENSMUSG00000038180", "shape": "dot", "title": "ENSMUSG00000038180\nensembl_gene_id: ENSMUSG00000038180\ngene_biotype: protein_coding\ngene_name: Spag4"}, {"color": "darksalmon", "id": "ENSMUSG00000078861", "label": "ENSMUSG00000078861", "shape": "dot", "title": "ENSMUSG00000078861\nensembl_gene_id: ENSMUSG00000078861\ngene_biotype: protein_coding\ngene_name: Zfp931"}, {"color": "darksalmon", "id": "ENSMUSG00000102053", "label": "ENSMUSG00000102053", "shape": "dot", "title": "ENSMUSG00000102053\nensembl_gene_id: ENSMUSG00000102053\ngene_biotype: protein_coding\ngene_name: Gm4064"}, {"color": "darksalmon", "id": "ENSMUSG00000109542", "label": "ENSMUSG00000109542", "shape": "dot", "title": "ENSMUSG00000109542\nensembl_gene_id: ENSMUSG00000109542\ngene_biotype: protein_coding\ngene_name: Olfr470"}]);
+                  edges = new vis.DataSet([{"from": "ENSMUSG00000017344", "to": "ENSMUSG00000037085", "weight": 0.39619370775542284}, {"from": "ENSMUSG00000109542", "to": "ENSMUSG00000078861", "weight": 0.38567915162032046}, {"from": "ENSMUSG00000017344", "to": "ENSMUSG00000109542", "weight": 0.3689296707736278}, {"from": "ENSMUSG00000017950", "to": "ENSMUSG00000078861", "weight": 0.36076162387223615}, {"from": "ENSMUSG00000017344", "to": "ENSMUSG00000078861", "weight": 0.35790716791812255}, {"from": "ENSMUSG00000109542", "to": "ENSMUSG00000001082", "weight": 0.3409528431773138}, {"from": "ENSMUSG00000017344", "to": "ENSMUSG00000017950", "weight": 0.3393021368088262}, {"from": "ENSMUSG00000078861", "to": "ENSMUSG00000002307", "weight": 0.33746022358677913}, {"from": "ENSMUSG00000017950", "to": "ENSMUSG00000001082", "weight": 0.3343402182542002}, {"from": "ENSMUSG00000109542", "to": "ENSMUSG00000017950", "weight": 0.3336425810726758}, {"from": "ENSMUSG00000001082", "to": "ENSMUSG00000002307", "weight": 0.31810898545214006}, {"from": "ENSMUSG00000037085", "to": "ENSMUSG00000109542", "weight": 0.3127341017336992}, {"from": "ENSMUSG00000037085", "to": "ENSMUSG00000078861", "weight": 0.30802776845516283}, {"from": "ENSMUSG00000037085", "to": "ENSMUSG00000017950", "weight": 0.3066713745527332}, {"from": "ENSMUSG00000038180", "to": "ENSMUSG00000028989", "weight": 0.29989809195324074}, {"from": "ENSMUSG00000102053", "to": "ENSMUSG00000028989", "weight": 0.2980223102325036}, {"from": "ENSMUSG00000001082", "to": "ENSMUSG00000038180", "weight": 0.2972136878022127}, {"from": "ENSMUSG00000017344", "to": "ENSMUSG00000001082", "weight": 0.29182570167290434}, {"from": "ENSMUSG00000017344", "to": "ENSMUSG00000002307", "weight": 0.28777301314636}, {"from": "ENSMUSG00000017950", "to": "ENSMUSG00000002307", "weight": 0.2748738654476476}, {"from": "ENSMUSG00000078861", "to": "ENSMUSG00000038180", "weight": 0.26634025884257323}, {"from": "ENSMUSG00000017344", "to": "ENSMUSG00000102053", "weight": 0.26098820266833}, {"from": "ENSMUSG00000109542", "to": "ENSMUSG00000038180", "weight": 0.260903805945089}, {"from": "ENSMUSG00000109542", "to": "ENSMUSG00000028989", "weight": 0.25778896096860254}, {"from": "ENSMUSG00000038180", "to": "ENSMUSG00000102053", "weight": 0.25736770517520347}, {"from": "ENSMUSG00000017950", "to": "ENSMUSG00000028989", "weight": 0.24201840698150384}, {"from": "ENSMUSG00000037085", "to": "ENSMUSG00000001082", "weight": 0.23997775287962067}, {"from": "ENSMUSG00000017344", "to": "ENSMUSG00000038180", "weight": 0.23934509414791028}, {"from": "ENSMUSG00000038180", "to": "ENSMUSG00000002307", "weight": 0.23767071142320645}, {"from": "ENSMUSG00000017950", "to": "ENSMUSG00000102053", "weight": 0.23232509436205093}, {"from": "ENSMUSG00000037085", "to": "ENSMUSG00000028989", "weight": 0.22825738838497772}, {"from": "ENSMUSG00000001082", "to": "ENSMUSG00000028989", "weight": 0.22763985598239717}, {"from": "ENSMUSG00000002307", "to": "ENSMUSG00000028989", "weight": 0.22142209786628866}, {"from": "ENSMUSG00000037085", "to": "ENSMUSG00000002307", "weight": 0.22065098667508617}, {"from": "ENSMUSG00000037085", "to": "ENSMUSG00000038180", "weight": 0.20756031088879337}, {"from": "ENSMUSG00000109542", "to": "ENSMUSG00000102053", "weight": 0.20313207296977218}, {"from": "ENSMUSG00000078861", "to": "ENSMUSG00000028989", "weight": 0.20302672421591647}, {"from": "ENSMUSG00000078861", "to": "ENSMUSG00000102053", "weight": 0.18560791976932353}, {"from": "ENSMUSG00000001082", "to": "ENSMUSG00000102053", "weight": 0.18072051413504722}, {"from": "ENSMUSG00000002307", "to": "ENSMUSG00000102053", "weight": 0.14140945792424733}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
